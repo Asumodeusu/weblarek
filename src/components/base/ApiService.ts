@@ -1,18 +1,16 @@
 import { Api } from "./Api";
 import { IProduct, IOrder, IOrderResult } from "../../types";
 
-export class ApiService {
-  private api: Api;
-
+export class ApiService extends Api {
   constructor(baseUrl: string, options: RequestInit = {}) {
-    this.api = new Api(baseUrl, options);
+    super(baseUrl, options); // добавил инциализацию
   }
 
   getProducts(): Promise<IProduct[]> {
-    return this.api.get("/product/");
+    return this.get<IProduct[]>("/product/");
   } // получение массива товаров
 
   createOrder(order: IOrder): Promise<IOrderResult> {
-    return this.api.post("/order/", order);
+    return this.post<IOrderResult>("/order/", order);
   } // отправка заказа
 }
