@@ -1,9 +1,12 @@
 // Хранение товаров, которые пользователь выбрал для покупки
 
 import { IProduct } from "../../../types/index";
+import { EventEmitter } from "../../base/Events";
 
 export class Basket {
   private ProductBuyer: IProduct[] = [];
+
+  constructor(private events: EventEmitter) {}
 
   getProducts(): IProduct[] {
     return this.ProductBuyer;
@@ -11,16 +14,19 @@ export class Basket {
 
   addProduct(product: IProduct) {
     this.ProductBuyer.push(product);
+    this.events.emit('basket:changed');
   } // добавление товара, который был получен в параметре в массив корзины;
 
   removeProduct(productId: string): void {
     this.ProductBuyer = this.ProductBuyer.filter(
       (product) => product.id !== productId
     );
+    this.events.emit('basket:changed');
   } // удаление товара, полученного в параметре из массива корзины;
 
   clearBasket() {
     this.ProductBuyer = [];
+    this.events.emit('basket:changed'); 
   } // очистка корзины;
 
   getTotalPrice(): number {

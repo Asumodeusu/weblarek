@@ -32,9 +32,9 @@ export type IOrder = Omit<IBuyer, "payment"> & {
   payment: TPayment; // явно указываем
   items: string[]; // массив ID товаров
   total: number; // общая сумма
-};
+}
 
 export type IOrderResult = {
   id: string; // ID заказа
   total: number; // итоговая сумма
-};
+}

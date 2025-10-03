@@ -1,14 +1,14 @@
 export function pascalToKebab(value: string): string {
     return value.replace(/([a-z0–9])([A-Z])/g, "$1-$2").toLowerCase();
-}
+} // преоброзавние имен для ксс
 
 export function isSelector(x: any): x is string {
     return (typeof x === "string") && x.length > 1;
-}
+} // проверяет селектор на строку
 
 export function isEmpty(value: any): boolean {
     return value === null || value === undefined;
-}
+} // проверка на пустоту нул и андефайнд
 
 export type SelectorCollection<T> = string | NodeListOf<Element> | T[];
 
@@ -23,7 +23,7 @@ export function ensureAllElements<T extends HTMLElement>(selectorElement: Select
         return selectorElement;
     }
     throw new Error(`Unknown selector element`);
-}
+} // поиск элементов (всех в карт и тд) и возвращает в массив
 
 export type SelectorElement<T> = T | string;
 
@@ -42,7 +42,7 @@ export function ensureElement<T extends HTMLElement>(selectorElement: SelectorEl
         return selectorElement as T;
     }
     throw new Error('Unknown selector element');
-}
+} // + НУЖНО поиск одного любового элемента и если нету выдаст ошибку или возвращает в готовый элемент
 
 export function cloneTemplate<T extends HTMLElement>(query: string | HTMLTemplateElement): T {
     const template = ensureElement(query) as HTMLTemplateElement;
@@ -50,7 +50,7 @@ export function cloneTemplate<T extends HTMLElement>(query: string | HTMLTemplat
         throw new Error(`Template ${query} has no content`);
     }
     return template.content.firstElementChild.cloneNode(true) as T;
-}
+} // + НУЖНО 6. клонирует содиржимое темплейт элемента*
 
 export function bem(block: string, element?: string, modifier?: string): { name: string, class: string } {
     let name = block;
@@ -60,7 +60,7 @@ export function bem(block: string, element?: string, modifier?: string): { name:
         name,
         class: `.${name}`
     };
-}
+} //7. генерирует бем классы
 
 export function getObjectProperties(obj: object, filter?: (name: string, prop: PropertyDescriptor) => boolean): string[] {
     return Object.entries(
@@ -70,7 +70,7 @@ export function getObjectProperties(obj: object, filter?: (name: string, prop: P
     )
         .filter(([name, prop]: [string, PropertyDescriptor]) => filter ? filter(name, prop) : (name !== 'constructor'))
         .map(([name,]) => name);
-}
+} // получает список свойств класса без конструкора
 
 /**
  * Устанавливает dataset атрибуты элемента
@@ -79,7 +79,7 @@ export function setElementData<T extends Record<string, unknown> | object>(el: H
     for (const key in data) {
         el.dataset[key] = String(data[key]);
     }
-}
+} // + НУЖНО хранение - записывает данные в дата атрибуты
 
 /**
  * Получает типизированные данные из dataset атрибутов элемента

@@ -1,13 +1,17 @@
 // Хранение товаров, которые можно купить в приложении
 
 import { IProduct } from "../../../types/index";
+import { EventEmitter } from "../../base/Events";
 
 export class CatalogProducts {
   private AllProducts: IProduct[] = [];
   private SelectedProduct: IProduct | null = null;
 
+  constructor(private events: EventEmitter) {}
+
   setProducts(products: IProduct[]) {
     this.AllProducts = products;
+    this.events.emit('catalog:changed');
   } // сохранения массива товаров полученного в параметрах метода;
 
   getProducts(): IProduct[] {
@@ -26,6 +30,7 @@ export class CatalogProducts {
 
   setSelectedProduct(products: IProduct) {
     this.SelectedProduct = products;
+    this.events.emit('product:selected', products);
   } // сохранения товара для подробного отображения;
 
   getSelectedProduct(): IProduct | null {

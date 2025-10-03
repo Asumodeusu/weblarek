@@ -255,7 +255,126 @@ total: number; // Итоговая сумма заказа
 `console.log("Товары с сервера сохранены в каталог:");`
 `console.log(productsModel.getProducts());});`
 
-### Структура проекта для работы с ПР8
+### Класс Header
+
+interface HeaderData {
+counterElement: number;
+}
+
+Принцип работы:
+
+Конструктор:
+
+Поля:
+private basketButton: HTMLButtonElement;
+private counterElement: HTMLElement;
+
+Методы:
+set counter(value: number)
+
+### Класс Gallery -------
+
+interface GalleryData {
+catalog: HTMLElement [];
+}
+
+Принцип работы:
+
+Конструктор:
+
+Поля:
+private catalogElement: HTMLElement;
+
+Методы:
+set catalog(items: HTMLElement[])
+
+
+### Класс Madal
+
+interface ModalData {
+contentElement: HTMLElement;
+}
+
+Принцип работы:
+
+Конструктор:
+super.continer // Component - constructor
+
+Поля:
+private modalCloseButton: HTMLButtonElement;
+private contentElement: HTMLElement
+
+Методы:
+
+### Класс Success
+
+interface HeaderData {
+
+}
+
+Принцип работы:
+
+Конструктор:
+
+Поля:
+private 
+private 
+
+Методы:
+
+### Класс
+
+interface HeaderData {
+
+}
+
+Принцип работы:
+
+Конструктор:
+
+Поля:
+private 
+private 
+
+Методы:
+
+### Класс
+
+interface HeaderData {
+
+}
+
+Принцип работы:
+
+Конструктор:
+
+Поля:
+private 
+private 
+
+Методы:
+
+### Класс
+
+### Класс
+
+### Класс
+
+### Класс
+
+### Класс
+
+### Класс
+
+### Класс
+
+### Класс
+
+### Класс
+
+### Класс
+
+### Структура репозитория
 
 ├── .env
 ├── README.md
