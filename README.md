@@ -456,6 +456,7 @@ Event-driven архитектура через EventEmitter
 
 ### Структура репозитория
 
+```
 ├── .env
 ├── README.md
 ├── src/
@@ -489,3 +490,8 @@ Event-driven архитектура через EventEmitter
 │ ├── types/
 │ │ └── index.ts
 │ └── main.ts
+```
+
+# Мой проект
+
+![Диаграмма классов](./architecture.png)
