@@ -492,6 +492,6 @@ Event-driven архитектура через EventEmitter
 │ └── main.ts
 ```
 
-# Мой проект
+# VIEW project
 
 ![Диаграмма классов](./architecture.png)
