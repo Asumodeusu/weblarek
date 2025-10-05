@@ -3,8 +3,8 @@ import { Component } from "../base/Component"
 import { IEvents } from "../base/Events"
 
 interface IBasketData {
-    items: HTMLElement[];
-    total: number;
+  items: HTMLElement[];
+  total: number;
 }
 
 export class BasketView extends Component<IBasketData> {

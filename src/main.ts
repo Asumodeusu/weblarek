@@ -30,6 +30,7 @@ import { FormContacts } from "./components/View/Form/FormContacts";
 import { FormAddress } from "./components/View/Form/FormAddress";
 import { CardPreview } from "./components/View/Card/CardPreview";
 import { CardBasket } from "./components/View/CardBasket";
+import { CardCatalog } from "./components/View/Card/CardCatalog";
 
 const events = new EventEmitter();
 
@@ -45,21 +46,24 @@ const gallery = new Gallery(events, catalogContainer);
 const modal = new Modal(events);
 const header = new Header(events, ensureElement<HTMLElement>(".header"));
 const basketTemplate = ensureElement<HTMLTemplateElement>("#basket");
-const formAddress = new FormAddress(events) as any; // any - чтоб было без геттеров и у меня стоит протектед
-const formContacts = new FormContacts(events) as any;
+const formAddress = new FormAddress(events);
+const formContacts = new FormContacts(events);
 const successTemplate = ensureElement<HTMLTemplateElement>("#success");
 const success = new Success(
   events,
   successTemplate.content.cloneNode(true) as HTMLElement
-) as any;
+);
 
 let currentBasketView: BasketView;
 let currentPreview: CardPreview | null = null;
 
-// обновление товаров
+// исправил для галереии
 events.on("catalog:changed", () => {
   const products = productsModel.getProducts();
-  gallery.render({ items: products });
+  const cardElements = products.map((product) => {
+    return new CardCatalog(events).render(product);
+  });
+  gallery.render({ items: cardElements });
 });
 
 // Изменение выбранного товара
@@ -116,12 +120,12 @@ events.on("card:remove", (product: IProduct) => {
 // Работа с формами
 // 1 часть
 events.on("basket:order", () => {
-  modal.open((formAddress as any).container);
+  modal.open(formAddress.render()); // использую render для получения container
 });
 
 events.on("payment:select", (data: { method: string }) => {
   buyer.setPayment(data.method as TPayment);
-  (formAddress as any).setPaymentSelected(data.method);
+  formAddress.setPaymentSelected(data.method);
   validateFirstForm();
 });
 
@@ -130,16 +134,15 @@ events.on("address:change", (data: { value: string }) => {
   validateFirstForm();
 });
 
-// Валидация формы
+// Валидация формы адреса
 const validateFirstForm = () => {
   const validation = buyer.validateBuyer();
   const isValid = validation.isValid;
-  (formAddress as any).formSubmitButtonElement.disabled = !isValid;
+  formAddress.setSubmitEnabled(isValid); // метод формы
   if (!isValid) {
-    (formAddress as any).formErrorsElement.textContent =
-      validation.errors.join(", ");
+    formAddress.setErrors(validation.errors.join(", "));
   } else {
-    (formAddress as any).formErrorsElement.textContent = "";
+    formAddress.clearErrors();
   }
 };
 
@@ -147,9 +150,9 @@ const validateFirstForm = () => {
 events.on("order:submit", () => {
   const validation = buyer.validateBuyer();
   if (validation.isValid) {
+    modal.open(formContacts.render());
   } else {
-    (formAddress as any).formErrorsElement.textContent =
-      validation.errors.join(", ");
+    formAddress.setErrors(validation.errors.join(", "));
   }
 });
 
@@ -165,16 +168,15 @@ events.on("contacts:phone", (data: { value: string }) => {
   validateSecondForm();
 });
 
-// Валидация формы
+// Валидация формы контактов
 const validateSecondForm = () => {
   const validation = buyer.validateBuyerContacts();
   const isValid = validation.isValid;
-  (formContacts as any).formSubmitButtonElement.disabled = !isValid;
+  formContacts.setSubmitEnabled(isValid);
   if (!isValid) {
-    (formContacts as any).formErrorsElement.textContent =
-      validation.errors.join(", ");
+    formContacts.setErrors(validation.errors.join(", "));
   } else {
-    (formContacts as any).formErrorsElement.textContent = "";
+    formContacts.clearErrors();
   }
 };
 
@@ -188,25 +190,13 @@ events.on("contacts:submit", () => {
       total: basket.getTotalPrice(),
     };
     apiService.createOrder(order).then((result: IOrderResult) => {
-      (success as any).total = result.total;
-      modal.open((success as any).container);
+      success.total = result.total;
+      modal.open(success.render());
       basket.clearBasket();
       buyer.clearBuyerData();
     });
   } else {
-    (formContacts as any).formErrorsElement.textContent =
-      validation.errors.join(", ");
-  }
-});
-
-// Обновляем переход из первой формы
-events.on("order:submit", () => {
-  const validation = buyer.validateBuyer();
-  if (validation.isValid) {
-    modal.open((formContacts as any).container);
-  } else {
-    (formAddress as any).formErrorsElement.textContent =
-      validation.errors.join(", ");
+    formContacts.setErrors(validation.errors.join(", "));
   }
 });
 

@@ -489,7 +489,3 @@ Event-driven архитектура через EventEmitter
 │ ├── types/
 │ │ └── index.ts
 │ └── main.ts
-
-# Блок схема
-
-![Диаграмма классов](./architecture.png)
