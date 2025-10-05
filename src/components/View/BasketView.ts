@@ -8,14 +8,14 @@ interface IBasketData {
 }
 
 export class BasketView extends Component<IBasketData> {
-  // protected basketTitleElement: HTMLElement;
+  protected basketTitleElement: HTMLElement;
   protected basketListElement: HTMLElement;
   protected basketButtonOrderElement: HTMLButtonElement;
   protected basketPriceElement: HTMLElement;
 
   constructor(protected events: IEvents, container: HTMLElement) {
     super(container)
-    // this.basketTitleElement = ensureElement<HTMLElement>('.modal__title', this.container);
+    this.basketTitleElement = ensureElement<HTMLElement>('.modal__title', this.container);
     this.basketListElement = ensureElement<HTMLElement>('.basket__list', this.container);  
     this.basketButtonOrderElement = ensureElement<HTMLButtonElement>('.basket__button', this.container);  
     this.basketPriceElement = ensureElement<HTMLElement>('.basket__price', this.container);  
@@ -27,7 +27,7 @@ export class BasketView extends Component<IBasketData> {
   
     set items(value: HTMLElement[]) {
     if (value.length === 0) {
-      this.basketListElement.innerHTML = '<p>Корзина пуста</p>';
+      this.basketListElement.innerHTML = 'Корзина пуста';
       this.basketButtonOrderElement.disabled = true;
     } else {
       this.basketListElement.replaceChildren(...value);

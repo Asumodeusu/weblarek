@@ -38,3 +38,8 @@ export type IOrderResult = {
   id: string; // ID заказа
   total: number; // итоговая сумма
 }
+
+export interface IProductsResponse {
+  total: number;
+  items: IProduct[];
+}

@@ -15,7 +15,6 @@ export class Gallery extends Component<{ items: IProduct[] }> {
       const card = new CardCatalog (this.events).render(product);
       this.container.appendChild(card);
     });
-
     return this.container;
   }
 }

@@ -1,12 +1,12 @@
 import { Api } from "./Api";
-import { IProduct, IOrder, IOrderResult } from "../../types";
+import { IOrder, IOrderResult, IProductsResponse } from "../../types";
 
 export class ApiService extends Api {
   constructor(baseUrl: string, options: RequestInit = {}) {
     super(baseUrl, options); // инициализация конструктора родительского класса
   }
 
-  getProducts(): Promise<IProduct[]> {
+  getProducts(): Promise<IProductsResponse> {
     return this.get("/product/");
   } // получение массива товаров
 

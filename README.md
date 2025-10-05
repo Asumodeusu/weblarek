@@ -191,7 +191,7 @@ total: number; // Итоговая сумма заказа
 `getBuyerData(): IBuyer` - получение всех данных покупателя
 `clearBuyerData()` - сброс всех данных покупателя
 `validateBuyerData(data: IBuyer): { isValid: boolean; errors: string[] }` - валидация данных
-пол
+
 Валидация включает:
 Проверку `email` на наличие `@` и `.`
 Проверку `телефона` на формат `+79991234567`
@@ -215,182 +215,281 @@ total: number; // Итоговая сумма заказа
 `getProducts(): Promise<IProduct[]>`- GET запрос на эндпоинт /product/ для получения каталога товаров
 `createOrder(order: IOrder): Promise<IOrderResult>` - POST запрос на эндпоинт /order/ для оформления заказа
 
+### View
+
+#### Класс Header
+
+Назначение: 
+Отображение состояния корзины и предоставление доступа к ней
+
+Конструктор:
+`events: IEvents` - шина событий для коммуникации между компонентами
+`container: HTMLElement` - корневой DOM-элемент для компонента header
+
+Поля:
+`basketButton: HTMLButtonElement` - кнопка для открытия корзины
+`counterElement: HTMLElement` - элемент, отображающий количество товаров в корзине
+
+Методы:
+`set counter(value: number)` - обновляет отображение счетчика корзины с переданным значением
+
+#### Класс Gallery
+
+Назначение:
+Отображение галереи товаров
+
+Конструктор:
+`events: IEvents` - шина событий для коммуникации между компонентами
+`container: HTMLElement` - корневой DOM-элемент для контейнера галереи
+
+Методы:
+`render(data?: { items: IProduct[] }): HTMLElement` - отрисовывает переданный массив товаров в виде карточек каталога
+
+#### Класс Modal
+
+Назначение:
+Управление модальными окнами приложения
+
+Конструктор:
+`events: IEvents` - шина событий для коммуникации между компонентами
+
+Поля:
+`ModalCloseButtonElement: HTMLButtonElement` - кнопка закрытия модального окна
+`ModalContentElement: HTMLElement` - контейнер для содержимого модального окна
+
+Методы:
+`open(content: HTMLElement): void` - открывает модальное окно
+`close(): void` - закрывает модальное окно и очищает его
+
+#### Класс Success
+
+Назначение:
+Отображение оформления заказа
+
+Конструктор:
+`events: IEvents` - шина событий для коммуникации между компонентами
+`container: HTMLElement` - корневой DOM-элемент
+
+Поля:
+`orderTitleElement: HTMLElement` - элемент заголовка заказа
+`description: HTMLElement` - информация о списании средств
+`orderButtonCloseElement: HTMLButtonElement` - кнопка закрытия страницы успеха
+
+Методы:
+`set total(value: number): void` - устанавливает сумму списания
+
+#### Класс BasketView
+
+Назначение:
+Отображение и управление корзины товаров
+
+Конструктор:
+`events: IEvents` - шина событий для коммуникации между компонентами
+`container: HTMLElement` - корневой DOM-элемент
+
+Поля:
+`basketTitleElement: HTMLElement` - элемент заголовка корзины
+`basketListElement: HTMLElement` - контейнер для списка товаров в корзине
+`basketButtonOrderElement: HTMLButtonElement` - кнопка оформления заказа
+`basketPriceElement: HTMLElement` - элемент отображения общей суммы заказа
+
+Методы:
+`set items(value: HTMLElement[]): void` - обновляет список товаров в корзине
+`set total(value: number): void` - устанавливает общую сумму заказа
+
+#### Класс CardBasket
+
+Назначение:
+Отображение карточки товара в корзине с возможностью удаления
+
+Конструктор:
+`events: IEvents` - шина событий для коммуникации между компонентами
+
+Поля:
+`title: HTMLElement` - элемент названия товара
+`price: HTMLElement` - элемент цены товара
+`CardIndexElement: HTMLElement` - элемент отображения порядкового номера товара
+`CardButtonRemoveElement: HTMLButtonElement` - кнопка удаления товара из корзины
+
+Методы:
+`render(product: IProduct & { index?: number }): HTMLElement` - отрисовывает карточку товара с данными и обработчиком удаления
+
+примечание:
+Независимая реализация обусловлена - из-за отсутствия `category` и `image`, что в свою очередь затрудняет наследование от родителя `AbstractCard`
+
+#### Абстрактный класс AbstractCard
+
+Назначение:
+Абстрактный класс для карточек товаров, определяющий общую структуру и логику
+
+Конструктор:
+`events: IEvents` - шина событий для коммуникации между компонентами
+`template: string` - селектор шаблона для создания карточки
+
+Поля:
+`category: HTMLElement` - элемент категории товара
+`title: HTMLElement` - элемент названия товара
+`image: HTMLImageElement` - элемент изображения товара
+`price: HTMLElement` - элемент цены товара
+
+Методы:
+`protected renderBase(product: IProduct): void` - заполняет базовые данные карточки товара
+`abstract render(product: IProduct): HTMLElement` - абстрактный метод для отрисовки карточки (реализуется в наследниках)
+
+#### Класс CardCatalog
+
+Назначение:
+Отображение карточки товара в каталоге с возможностью выбора
+
+Конструктор:
+`events: IEvents` - шина событий для коммуникации между компонентами
+
+Поля:
+Наследует от `AbstractCard`: `category`, `title`, `image`, `price`
+
+Методы:
+`render(product: IProduct): HTMLElement` - отрисовывает карточку товара с обработчиком выбора
+
+#### Класс CardPreview
+
+Назначение:
+Отображение превью с возможностью добавления/удаления из корзины
+
+Конструктор:
+`events: IEvents` - шина событий для коммуникации между компонентами
+
+Поля:
+Наследует от `AbstractCard`: `category`, `title`, `image`, `price`
+`description: HTMLElement` - элемент описания товара
+`CardButtonElement: HTMLButtonElement` - кнопка управления состоянием товара в корзине
+
+Методы:
+`render(product: IProduct): HTMLElement` - отрисовывает детальную карточку товара с обработчиком взаимодействия
+`setInBasket(inBasket: boolean): void` - обновляет состояние кнопки в зависимости от наличия товара в корзине
+
+#### Абстрактный класс AbstractFormOrder
+
+Назначение:
+Абстрактный класс для форм оформления заказа, определяющий общую структуру и поведение
+
+Конструктор:
+`events: IEvents` - шина событий для коммуникации между компонентами
+`template: string` - селектор шаблона для создания формы
+`submitEvent: string` - название события, отправляемого при сабмите формы
+
+Поля:
+`formSubmitButtonElement: HTMLButtonElement` - кнопка отправки формы
+`formErrorsElement: HTMLElement` - контейнер для отображения ошибок
+`formTitleElements: HTMLElement[]` - элементы заголовков формы
+
+Методы:
+`protected setErrors(message: string): void` - устанавливает сообщение об ошибке
+`protected setSubmitEnabled(enabled: boolean): void` - управляет состоянием кнопки отправки формы
+
+#### Класс FormAddress
+
+Назначение:
+Управление формой ввода адреса и выбора способа оплаты
+
+Конструктор:
+`events: IEvents` - шина событий для коммуникации между компонентами
+
+Поля:
+Наследует от AbstractFormOrder: `formSubmitButtonElement`, `formErrorsElement`, `formTitleElements`
+`FormPaymentButtonElement: HTMLButtonElement[]` - кнопки выбора способа оплаты
+`FormAddressInputElement: HTMLInputElement` - поле ввода адреса доставки
+
+Методы:
+`setPaymentSelected(method: string): void` - устанавливает выбранный способ оплаты с визуальным выделением
+
+#### Класс FormContacts
+
+Назначение:
+Управление формой ввода контактных данных покупателя
+
+Конструктор:
+`events: IEvents` - шина событий для коммуникации между компонентами
+
+Поля:
+Наследует от AbstractFormOrder: `formSubmitButtonElement`, `formErrorsElement`, `formTitleElements`
+`FormEmailInputElement: HTMLInputElement` - поле ввода электронной почты
+`FormTelephoneInputElement: HTMLInputElement` - поле ввода телефона
+
+Методы:
+Отсутствуют (использует унаследованные методы базового класса)
+
 ### Основной скрипт (main.ts)
 
-Назначение: Инициализация приложения, тестирование компонентов
+Назначение: Инициализация приложения
 
-Импорт:
-`import "./scss/styles.scss";`
-`import { CatalogProducts } from "./components/Models/Products/CatalogProducts";`
-`import { Basket } from "./components/Models/Products/Basket";`
-`import { Buyer } from "./components/Models/Buyers/Buyer";`
-`import { apiProducts } from "./utils/data";`
-`import { API_URL } from "./utils/constants";`
-`import { ApiService } from "./components/base/ApiService";`
+## Модели
+**CatalogProducts** - каталог товаров  
+**Basket** - корзина покупок  
+**Buyer** - данные покупателя
 
-Инициализация моделей:
-`const productsModel = new CatalogProducts();` - товары
-`const basket = new Basket();` - корзина
-`const buyer = new Buyer();` - покупатель
+## Сервисы
+**ApiService** - работа с API
 
-Тестирование CatalogProducts:
-`productsModel.setProducts(apiProducts.items);`
-`console.log('Каталог товаров:', productsModel.getProducts());`
+## Представления
+**Gallery** - галерея карточек 
+**Header** - верхняя панель с корзиной  
+**Modal** - модальные окна  
+**BasketView** - интерфейс корзины  
+**FormAddress/FormContacts** - формы заказа  
+**CardPreview/CardBasket** - карточки товаров  
+**Success** - страница успеха
 
-Тестирование Basket:
-`console.log("Содержимое корзины:", basket.getProducts());`
+## Поток данных
+1. Загрузка товаров
+2. Добавление в корзину
+3. Оформление заказа
+4. Отправка → API → Success
 
-Тестирование покупателя:
-`buyer.setPayment('card');`
-`buyer.setEmail('test@mail.ru');`
-`buyer.setPhone('+79991234567');`
-`buyer.setAddress('ул. Примерная, 1');`
-`console.log('Данные покупателя:', buyer.getBuyerData());`
+## События
+`catalog:changed`, `basket:changed`, `card:toggle`, `order:submit`, `success:close`
 
-Работа с ApiService:
-`const apiService = new ApiService(API_URL);`
-`apiService.getProducts()`
-`.then(products => {`
-`productsModel.setProducts(products);`
-`console.log("Товары с сервера сохранены в каталог:");`
-`console.log(productsModel.getProducts());});`
-
-### Класс Header
-
-interface HeaderData {
-counterElement: number;
-}
-
-Принцип работы:
-
-Конструктор:
-
-Поля:
-private basketButton: HTMLButtonElement;
-private counterElement: HTMLElement;
-
-Методы:
-set counter(value: number)
-
-### Класс Gallery -------
-
-interface GalleryData {
-catalog: HTMLElement [];
-}
-
-Принцип работы:
-
-Конструктор:
-
-Поля:
-private catalogElement: HTMLElement;
-
-Методы:
-set catalog(items: HTMLElement[])
-
-
-### Класс Madal
-
-interface ModalData {
-contentElement: HTMLElement;
-}
-
-Принцип работы:
-
-Конструктор:
-super.continer // Component - constructor
-
-Поля:
-private modalCloseButton: HTMLButtonElement;
-private contentElement: HTMLElement
-
-Методы:
-
-### Класс Success
-
-interface HeaderData {
-
-}
-
-Принцип работы:
-
-Конструктор:
-
-Поля:
-private 
-private 
-
-Методы:
-
-### Класс
-
-interface HeaderData {
-
-}
-
-Принцип работы:
-
-Конструктор:
-
-Поля:
-private 
-private 
-
-Методы:
-
-### Класс
-
-interface HeaderData {
-
-}
-
-Принцип работы:
-
-Конструктор:
-
-Поля:
-private 
-private 
-
-Методы:
-
-### Класс
-
-### Класс
-
-### Класс
-
-### Класс
-
-### Класс
-
-### Класс
-
-### Класс
-
-### Класс
-
-### Класс
-
-### Класс
+## Особенности
+Event-driven архитектура через EventEmitter
+Разделение на Model-View слои
+Двухэтапное оформление заказа с валидацией
+Динамическое обновление интерфейса
 
 ### Структура репозитория
 
 ├── .env
 ├── README.md
-├── src
-│   ├── components
-│   │   ├── Models
-│   │   │   ├── Buyers
-│   │   │   │   └── Buyer.ts
-│   │   │   └── Products
-│   │   │       ├── Basket.ts
-│   │   │       └── CatalogProducts.ts
-│   │   └── base
-│   │       ├── Api.ts
-│   │       ├── ApiService.ts
-│   │       ├── Component.ts
-│   │       └── Events.ts
-│   ├── main.ts
-│   ├── types
-│   │   └── index.ts
+├── src/
+│ ├── components/
+│ │ ├── Models/
+│ │ │ ├── Buyers/
+│ │ │ │ └── Buyer.ts
+│ │ │ └── Products/
+│ │ │ ├── Basket.ts
+│ │ │ └── CatalogProducts.ts
+│ │ ├── View/
+│ │ │ ├── Card/
+│ │ │ │ ├── AbstractCard.ts
+│ │ │ │ ├── CardCatalog.ts
+│ │ │ │ └── CardPreview.ts
+│ │ │ ├── Form/
+│ │ │ │ ├── AbstractFormOrder.ts
+│ │ │ │ ├── FormAddress.ts
+│ │ │ │ └── FormContacts.ts
+│ │ │ ├── BasketView.ts
+│ │ │ ├── CardBasket.ts
+│ │ │ ├── Gallery.ts
+│ │ │ ├── Header.ts
+│ │ │ ├── Modal.ts
+│ │ │ └── Success.ts
+│ │ └── base/
+│ │ ├── Api.ts
+│ │ ├── ApiService.ts
+│ │ ├── Component.ts
+│ │ └── Events.ts
+│ ├── types/
+│ │ └── index.ts
+│ └── main.ts
+
+# Блок схема
+
+![Диаграмма классов](./architecture.png)

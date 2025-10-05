@@ -35,5 +35,5 @@ export class CatalogProducts {
 
   getSelectedProduct(): IProduct | null {
     return this.SelectedProduct;
-  } // получение товара для подробного отображения.
+  } // получение товара для подробного отображения;
 }
